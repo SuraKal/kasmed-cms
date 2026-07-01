@@ -1,0 +1,40 @@
+export const IMAGES = {
+  hero: "https://images.unsplash.com/photo-1691934310598-27528df21f9c?auto=format&fit=crop&w=1600&q=80",
+  about:
+    "https://plus.unsplash.com/premium_photo-1723921308333-013c017c4878?q=80&w=752&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  distribution:
+    "https://images.unsplash.com/photo-1595054103602-b61d4c10c660?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fE1lZGljYWwlMjBJbXBvcnQlMjBhbmQlMjBkaXN0cmlidXRpb258ZW58MHx8MHx8fDA%3D",
+  patientMonitoring:
+    "https://images.unsplash.com/photo-1513224502586-d1e602410265?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8UGF0aWVudCUyME1vbml0b3JpbmclMjAlMjYlMjBDcml0aWNhbCUyMENhcmV8ZW58MHx8MHx8fDA%3D",
+  hospitalRoom:
+    "https://plus.unsplash.com/premium_photo-1764687771201-fe82cff01189?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  renalCare:
+    "https://images.unsplash.com/photo-1580420768674-7078c2bebec6?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  roWater:
+    "https://images.unsplash.com/photo-1705708551758-76b153fa536e?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  neonatal:
+    "https://images.unsplash.com/photo-1583356230736-b5b9ecb85605?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fE5lb25hdGFsJTIwQ2FyZXxlbnwwfHwwfHx8MA%3D%3D",
+  surgical:
+    "https://images.unsplash.com/photo-1630531210974-dab9b07c4eff?auto=format&fit=crop&w=1600&q=80",
+  laboratory:
+    "https://images.unsplash.com/photo-1645684922842-87793d0b25df?auto=format&fit=crop&w=1600&q=80",
+  clinicalSupplies:
+    "https://images.unsplash.com/photo-1642055514517-7b52288890ec?auto=format&fit=crop&w=1600&q=80",
+  orthopedic:
+    "https://images.unsplash.com/photo-1727830968495-ea2798aaee35?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  wasteManagement:
+    "https://images.unsplash.com/photo-1669344319217-19810a5e3d3b?auto=format&fit=crop&w=1600&q=80",
+  coverageMap:
+    "https://images.unsplash.com/photo-1691934310598-27528df21f9c?auto=format&fit=crop&w=1600&q=80",
+  team: "https://images.unsplash.com/photo-1758691462848-ba1e929da259?auto=format&fit=crop&w=1600&q=80",
+  serviceEngineer:
+    "https://images.unsplash.com/photo-1630531210843-d6f343ad1f90?auto=format&fit=crop&w=1600&q=80",
+  installation:
+    "https://images.unsplash.com/photo-1645684922842-87793d0b25df?auto=format&fit=crop&w=1600&q=80",
+  valuesBackground:
+    "https://images.unsplash.com/photo-1669344319217-19810a5e3d3b?auto=format&fit=crop&w=1600&q=80",
+  humanity:
+    "https://images.unsplash.com/photo-1691934310598-27528df21f9c?auto=format&fit=crop&w=1600&q=80",
+  commitment:
+    "https://images.unsplash.com/photo-1758691462848-ba1e929da259?auto=format&fit=crop&w=1600&q=80",
+};
