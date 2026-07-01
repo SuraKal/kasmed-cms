@@ -29,3 +29,6 @@ dist-ssr
 
 .env
 .vite
+backend/.venv/
+backend/data/
+backend/uploads/

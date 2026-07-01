@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, MessageCircle, ArrowUp } from "lucide-react";
 
-export default function FloatingActions() {
+export default function FloatingActions({ settings }) {
   const [showTop, setShowTop] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const phone = settings?.phone_primary || "+251954085010";
+  const phoneDigits = phone.replace(/\D/g, "");
 
   useEffect(() => {
     const handleScroll = () => setShowTop(window.scrollY > 600);
@@ -37,7 +39,7 @@ export default function FloatingActions() {
               initial={{ opacity: 0, y: 10, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.8 }}
-              href="https://wa.me/251954085010"
+              href={`https://wa.me/${phoneDigits}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-12 h-12 rounded-full bg-[#25D366] text-white shadow-lg flex items-center justify-center hover:shadow-xl hover:-translate-y-0.5 transition-all"
@@ -49,7 +51,7 @@ export default function FloatingActions() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.8 }}
               transition={{ delay: 0.05 }}
-              href="tel:+251954085010"
+              href={`tel:${phone.replace(/\s+/g, "")}`}
               className="w-12 h-12 rounded-full bg-navy text-white shadow-lg flex items-center justify-center hover:shadow-xl hover:-translate-y-0.5 transition-all"
             >
               <Phone className="w-5 h-5" />

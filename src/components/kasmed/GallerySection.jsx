@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { IMAGES } from "@/lib/images";
+import { resolveAssetUrl } from "@/lib/api";
 
-const gallery = [
+const fallbackGallery = [
   {
     src: IMAGES.patientMonitoring,
     alt: "Patient Monitoring Equipment",
@@ -18,8 +19,16 @@ const gallery = [
   { src: IMAGES.renalCare, alt: "Renal Care Systems", span: "" },
 ];
 
-export default function GallerySection() {
+export default function GallerySection({ items = [] }) {
   const [lightbox, setLightbox] = useState(null);
+  const gallery =
+    items.length > 0
+      ? items.map((item, index) => ({
+          src: resolveAssetUrl(item.image),
+          alt: item.alt_text || item.title,
+          span: index === 0 ? "col-span-2 row-span-2" : index === 2 ? "col-span-2" : "",
+        }))
+      : fallbackGallery;
 
   return (
     <section

@@ -15,9 +15,11 @@ const NAV_LINKS = [
   { label: "Contact", href: "#contact" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ settings }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const phone = settings?.phone_primary || SITE_CONFIG.phone;
+  const companyName = settings?.company_name || SITE_CONFIG.name;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -41,7 +43,7 @@ export default function Navbar() {
           <a href="#hero" className="flex items-center gap-2 group">
             <img
               src={scrolled ? LOGO_DARK : LOGO_LIGHT}
-              alt={SITE_CONFIG.name}
+              alt={companyName}
               className={`block w-auto object-contain transition-all duration-300 ${
                 scrolled ? "h-11" : "h-12"
               }`}
@@ -67,13 +69,13 @@ export default function Navbar() {
 
           <div className="hidden lg:flex items-center gap-3">
             <a
-              href={`tel:${SITE_CONFIG.phone.replace(/\s+/g, "")}`}
+              href={`tel:${phone.replace(/\s+/g, "")}`}
               className={`flex items-center gap-2 text-sm font-medium transition-colors ${
                 scrolled ? "text-navy/70" : "text-white/70"
               }`}
             >
               <Phone className="w-4 h-4" />
-              <span className="hidden xl:inline">{SITE_CONFIG.phone}</span>
+              <span className="hidden xl:inline">{phone}</span>
             </a>
             <a
               href="#contact"
@@ -114,7 +116,7 @@ export default function Navbar() {
               <div className="flex items-center gap-2">
                     <img
                       src={LOGO_DARK}
-                      alt={SITE_CONFIG.name}
+                      alt={companyName}
                       className="block h-10 w-auto object-contain"
                     />
                     
@@ -140,11 +142,11 @@ export default function Navbar() {
                 </div>
                 <div className="mt-8 pt-6 border-t border-surgical">
                   <a
-                    href={`tel:${SITE_CONFIG.phone.replace(/\s+/g, "")}`}
+                    href={`tel:${phone.replace(/\s+/g, "")}`}
                     className="flex items-center gap-2 text-navy/70 mb-4 px-4"
                   >
                     <Phone className="w-4 h-4" />
-                    {SITE_CONFIG.phone}
+                    {phone}
                   </a>
                   <a
                     href="#contact"

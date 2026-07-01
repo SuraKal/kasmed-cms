@@ -1,5 +1,13 @@
 import React from "react";
-import { Phone, Mail, MapPin } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
+  Twitter,
+} from "lucide-react";
 import { SITE_CONFIG } from "@/lib/site-config";
 
 const LOGO_LIGHT = "/images/logo/logo_light.png";
@@ -25,7 +33,25 @@ const solutions = [
   "Orthopedics",
 ];
 
-export default function Footer() {
+export default function Footer({ settings, solutionsData = [] }) {
+  const companyName = settings?.company_name || SITE_CONFIG.name;
+  const phone = settings?.phone_primary || SITE_CONFIG.phone;
+  const email = settings?.email_primary || SITE_CONFIG.email;
+  const addressLines =
+    settings?.address_text?.split("\n").filter(Boolean) || SITE_CONFIG.addressLines;
+  const displayedSolutions = solutionsData.length
+    ? solutionsData.slice(0, 6).map((item) => item.name)
+    : solutions;
+  const socialIcons = {
+    facebook: Facebook,
+    linkedin: Linkedin,
+    instagram: Instagram,
+    x: Twitter,
+  };
+  const socialLinks = Object.entries(settings?.social_links || {}).filter(
+    ([, url]) => url,
+  );
+
   return (
     <footer className="bg-[#060E20] text-white/60 pt-16 lg:pt-20 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,30 +60,30 @@ export default function Footer() {
             <div className="flex items-center gap-2 mb-4">
               <img
                 src={LOGO_LIGHT}
-                alt={SITE_CONFIG.name}
+                alt={companyName}
                 className="block h-11 w-auto object-contain"
               />
             </div>
             <p className="text-sm leading-relaxed mb-6 max-w-xs">
-              Advancing healthcare across East Africa through world-class
-              medical devices, innovative solutions, and dedicated service.
+              {settings?.footer_description ||
+                "Advancing healthcare across East Africa through world-class medical devices, innovative solutions, and dedicated service."}
             </p>
             <div className="space-y-2">
               <a
-                href={`tel:${SITE_CONFIG.phone.replace(/\s+/g, "")}`}
+                href={`tel:${phone.replace(/\s+/g, "")}`}
                 className="flex items-center gap-2 text-sm hover:text-cyan transition-colors"
               >
-                <Phone className="w-4 h-4" /> {SITE_CONFIG.phone}
+                <Phone className="w-4 h-4" /> {phone}
               </a>
               <a
-                href={`mailto:${SITE_CONFIG.email}`}
+                href={`mailto:${email}`}
                 className="flex items-center gap-2 text-sm hover:text-cyan transition-colors"
               >
-                <Mail className="w-4 h-4" /> {SITE_CONFIG.email}
+                <Mail className="w-4 h-4" /> {email}
               </a>
               <div className="flex items-start gap-2 text-sm">
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
-                <span>{SITE_CONFIG.addressLines.join(", ")}</span>
+                <span>{addressLines.join(", ")}</span>
               </div>
             </div>
           </div>
@@ -85,7 +111,7 @@ export default function Footer() {
               Solutions
             </h4>
             <ul className="space-y-3">
-              {solutions.map((solution) => (
+              {displayedSolutions.map((solution) => (
                 <li key={solution}>
                   <a
                     href="#solutions"
@@ -111,12 +137,31 @@ export default function Footer() {
             >
               Contact Us
             </a>
+            {socialLinks.length > 0 && (
+              <div className="mt-5 flex gap-2">
+                {socialLinks.map(([network, url]) => {
+                  const Icon = socialIcons[network];
+                  return Icon ? (
+                    <a
+                      key={network}
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={network}
+                      className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 hover:bg-cyan hover:text-white"
+                    >
+                      <Icon className="h-4 w-4" />
+                    </a>
+                  ) : null;
+                })}
+              </div>
+            )}
           </div>
         </div>
 
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs">
-            © {new Date().getFullYear()} {SITE_CONFIG.name}. All rights
+            © {new Date().getFullYear()} {companyName}. All rights
             reserved.
           </p>
           <div className="flex gap-6">

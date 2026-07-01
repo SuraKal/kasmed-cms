@@ -16,8 +16,9 @@ import {
 } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { IMAGES } from "@/lib/images";
+import { resolveAssetUrl } from "@/lib/api";
 
-const solutions = [
+const fallbackSolutions = [
   {
     icon: Monitor,
     title: "Patient Monitoring & Critical Care",
@@ -246,8 +247,33 @@ function SolutionModal({ solution, onClose }) {
   );
 }
 
-export default function SolutionsSection() {
+export default function SolutionsSection({ items = [] }) {
   const [selected, setSelected] = useState(null);
+  const solutionIcons = [
+    Monitor,
+    BedDouble,
+    HeartPulse,
+    Droplets,
+    Baby,
+    Scissors,
+    Microscope,
+    TestTube2,
+    Bone,
+    Trash2,
+  ];
+  const solutions =
+    items.length > 0
+      ? items.map((item, index) => ({
+          icon: solutionIcons[index % solutionIcons.length],
+          title: item.name,
+          short: item.short_description,
+          full: item.description || item.short_description,
+          image:
+            resolveAssetUrl(item.thumbnail) ||
+            fallbackSolutions[index % fallbackSolutions.length].image,
+          products: item.tags || [],
+        }))
+      : fallbackSolutions;
 
   return (
     <section

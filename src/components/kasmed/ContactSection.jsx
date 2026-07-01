@@ -3,8 +3,9 @@ import { motion } from "framer-motion";
 import { Phone, Mail, Send, Clock, Building2 } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { SITE_CONFIG } from "@/lib/site-config";
+import { apiRequest } from "@/lib/api";
 
-export default function ContactSection() {
+export default function ContactSection({ settings }) {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -13,12 +14,32 @@ export default function ContactSection() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const addressLines =
+    settings?.address_text?.split("\n").filter(Boolean) || SITE_CONFIG.addressLines;
+  const phone = settings?.phone_primary || SITE_CONFIG.phone;
+  const email = settings?.email_primary || SITE_CONFIG.email;
+  const businessHours = settings?.business_hours?.length
+    ? settings.business_hours
+    : ["Mon – Fri: 8:30 AM – 5:30 PM", "Sat: 9:00 AM – 1:00 PM"];
+  const mapUrl =
+    settings?.map_embed_url ||
+    "https://www.openstreetmap.org/export/embed.html?bbox=38.72%2C9.00%2C38.76%2C9.03&layer=mapnik&marker=9.015%2C38.74";
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
-    setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+    setSubmitError("");
+    try {
+      await apiRequest("/api/contact", {
+        method: "POST",
+        body: JSON.stringify(form),
+      });
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
+      setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+    } catch (error) {
+      setSubmitError(error.message);
+    }
   };
 
   return (
@@ -66,6 +87,11 @@ export default function ContactSection() {
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  {submitError && (
+                    <div className="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                      {submitError}
+                    </div>
+                  )}
                   <div className="grid sm:grid-cols-2 gap-5">
                     <div>
                       <label className="text-white/60 text-sm font-medium mb-2 block">
@@ -167,27 +193,24 @@ export default function ContactSection() {
                 {
                   icon: Building2,
                   title: "Head Office",
-                  lines: SITE_CONFIG.addressLines,
+                  lines: addressLines,
                 },
                 {
                   icon: Phone,
                   title: "Phone",
-                  lines: [SITE_CONFIG.phone],
-                  href: `tel:${SITE_CONFIG.phone.replace(/\s+/g, "")}`,
+                  lines: [phone, settings?.phone_secondary].filter(Boolean),
+                  href: `tel:${phone.replace(/\s+/g, "")}`,
                 },
                 {
                   icon: Mail,
                   title: "Email",
-                  lines: [SITE_CONFIG.email],
-                  href: `mailto:${SITE_CONFIG.email}`,
+                  lines: [email, settings?.email_secondary].filter(Boolean),
+                  href: `mailto:${email}`,
                 },
                 {
                   icon: Clock,
                   title: "Business Hours",
-                  lines: [
-                    "Mon – Fri: 8:30 AM – 5:30 PM",
-                    "Sat: 9:00 AM – 1:00 PM",
-                  ],
+                  lines: businessHours,
                 },
               ].map((item) => (
                 <motion.div
@@ -225,7 +248,7 @@ export default function ContactSection() {
               <div className="rounded-2xl overflow-hidden border border-white/10 h-48">
                 <iframe
                   title="KASMED Location"
-                  src="https://www.openstreetmap.org/export/embed.html?bbox=38.72%2C9.00%2C38.76%2C9.03&layer=mapnik&marker=9.015%2C38.74"
+                  src={mapUrl}
                   className="w-full h-full border-0 grayscale contrast-125 opacity-70"
                   loading="lazy"
                 />

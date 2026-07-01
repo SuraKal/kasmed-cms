@@ -4,7 +4,7 @@ import { Heart, Handshake, Award, ShieldCheck } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { IMAGES } from "@/lib/images";
 
-const values = [
+const fallbackValues = [
   {
     icon: Heart,
     title: "Humanity",
@@ -31,7 +31,20 @@ const values = [
   },
 ];
 
-export default function ValuesSection() {
+const valueIcons = { Heart, Handshake, Award, ShieldCheck };
+
+export default function ValuesSection({ items = [] }) {
+  const values =
+    items.length > 0
+      ? items.map((item, index) => ({
+          icon:
+            valueIcons[item.icon] ||
+            fallbackValues[index % fallbackValues.length].icon,
+          title: item.name,
+          description: item.description,
+        }))
+      : fallbackValues;
+
   return (
     <section id="values" className="py-24 lg:py-32 relative overflow-hidden">
       {/* Background */}

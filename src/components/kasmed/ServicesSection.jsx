@@ -9,8 +9,9 @@ import {
 } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import { IMAGES } from "@/lib/images";
+import { resolveAssetUrl } from "@/lib/api";
 
-const services = [
+const fallbackServices = [
   {
     icon: Truck,
     title: "Import & Distribution",
@@ -41,7 +42,20 @@ const services = [
   },
 ];
 
-export default function ServicesSection() {
+export default function ServicesSection({ items = [] }) {
+  const serviceIcons = [Truck, HeartPulse, Wrench, FlaskConical];
+  const services =
+    items.length > 0
+      ? items.map((item, index) => ({
+          icon: serviceIcons[index % serviceIcons.length],
+          title: item.name,
+          description: item.description,
+          image:
+            resolveAssetUrl(item.thumbnail) ||
+            fallbackServices[index % fallbackServices.length].image,
+        }))
+      : fallbackServices;
+
   return (
     <section
       id="services"

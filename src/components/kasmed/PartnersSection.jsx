@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import ScrollReveal from "./ScrollReveal";
+import { resolveAssetUrl } from "@/lib/api";
 
 const clientFallbacks = [
   { name: "USAID", fallbackSrc: "/clients/usaid.png" },
@@ -184,7 +185,24 @@ function LogoSection({
   );
 }
 
-export default function PartnersSection() {
+function managedLogos(items, fallback) {
+  if (!items?.length) return fallback;
+  return items.map((item, index) => ({
+    name: item.name,
+    shortLabel: String(index + 1).padStart(2, "0"),
+    src: resolveAssetUrl(item.logo),
+  }));
+}
+
+export default function PartnersSection({
+  suppliersData = [],
+  clientsData = [],
+  customersData = [],
+}) {
+  const supplierItems = managedLogos(suppliersData, suppliers);
+  const clientItems = managedLogos(clientsData, clients);
+  const customerItems = managedLogos(customersData, satisfiedCustomers);
+
   return (
     <>
       <LogoSection
@@ -194,8 +212,8 @@ export default function PartnersSection() {
         eyebrow="Global Network"
         title="Our Global Suppliers"
         subtitle="Partnered with world-renowned manufacturers to bring proven, reliable technology to East Africa."
-        badgeText="17 Global Suppliers"
-        items={suppliers}
+        badgeText={`${supplierItems.length} Global Suppliers`}
+        items={supplierItems}
         reverse={false}
         speed={25}
       />
@@ -207,8 +225,8 @@ export default function PartnersSection() {
         eyebrow="Trust & Credibility"
         title="Our Valued Clients"
         subtitle="Trusted by international organizations, government agencies, and leading healthcare institutions."
-        badgeText="10 Valued Clients"
-        items={clients}
+        badgeText={`${clientItems.length} Valued Clients`}
+        items={clientItems}
         reverse={true}
         speed={30}
       />
@@ -220,8 +238,8 @@ export default function PartnersSection() {
         eyebrow="Customer Impact"
         title="Our Satisfied Customers"
         subtitle="Organizations across East Africa that rely on KASMED for quality healthcare solutions and ongoing partnership."
-        badgeText="14 Satisfied Customers"
-        items={satisfiedCustomers}
+        badgeText={`${customerItems.length} Satisfied Customers`}
+        items={customerItems}
         reverse={false}
         speed={27}
       />
