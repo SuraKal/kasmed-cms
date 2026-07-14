@@ -13,24 +13,24 @@ import { SITE_CONFIG } from "@/lib/site-config";
 const LOGO_LIGHT = "/images/logo/logo_light.png";
 
 const quickLinks = [
-  { label: "About Us", href: "#about" },
-  { label: "Solutions", href: "#solutions" },
-  { label: "Services", href: "#services" },
-  { label: "Core Values", href: "#values" },
-  { label: "Suppliers", href: "#partners" },
-  { label: "Clients", href: "#clients" },
-  { label: "Customers", href: "#customers" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Contact", href: "#contact" },
+  { label: "About Us", href: "/about" },
+  { label: "Solutions", href: "/solutions" },
+  { label: "Engagements", href: "/engagements" },
+  { label: "Core Values", href: "/#values" },
+  { label: "Suppliers", href: "/#partners" },
+  { label: "Clients", href: "/#clients" },
+  { label: "Customers", href: "/#customers" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const solutions = [
-  "Patient Monitoring",
-  "Renal Care",
-  "Neonatal Care",
-  "Surgical Room",
-  "Laboratory",
-  "Orthopedics",
+  { name: "Patient Monitoring", slug: "patient-monitoring-critical-care" },
+  { name: "Renal Care", slug: "renal-care-systems" },
+  { name: "Neonatal Care", slug: "neonatal-care" },
+  { name: "Surgical Room", slug: "surgical-room" },
+  { name: "Laboratory", slug: "laboratory-solutions" },
+  { name: "Orthopedics", slug: "orthopedic-instruments-implants" },
 ];
 
 export default function Footer({ settings, solutionsData = [] }) {
@@ -40,7 +40,10 @@ export default function Footer({ settings, solutionsData = [] }) {
   const addressLines =
     settings?.address_text?.split("\n").filter(Boolean) || SITE_CONFIG.addressLines;
   const displayedSolutions = solutionsData.length
-    ? solutionsData.slice(0, 6).map((item) => item.name)
+    ? solutionsData.slice(0, 6).map((item) => ({
+        name: item.name,
+        slug: item.slug,
+      }))
     : solutions;
   const socialIcons = {
     facebook: Facebook,
@@ -112,12 +115,12 @@ export default function Footer({ settings, solutionsData = [] }) {
             </h4>
             <ul className="space-y-3">
               {displayedSolutions.map((solution) => (
-                <li key={solution}>
+                <li key={solution.slug}>
                   <a
-                    href="#solutions"
+                    href={`/solutions/${solution.slug}`}
                     className="text-sm hover:text-cyan transition-colors"
                   >
-                    {solution}
+                    {solution.name}
                   </a>
                 </li>
               ))}
@@ -132,7 +135,7 @@ export default function Footer({ settings, solutionsData = [] }) {
               Get the latest updates on our healthcare solutions and products.
             </p>
             <a
-              href="#contact"
+              href="/contact"
               className="inline-block bg-cyan text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-cyan/90 transition-all"
             >
               Contact Us
@@ -166,13 +169,13 @@ export default function Footer({ settings, solutionsData = [] }) {
           </p>
           <div className="flex gap-6">
             <a
-              href="#about"
+              href="/about"
               className="text-xs hover:text-cyan transition-colors"
             >
               Privacy Policy
             </a>
             <a
-              href="#about"
+              href="/about"
               className="text-xs hover:text-cyan transition-colors"
             >
               Terms of Service

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import { apiRequest } from "@/lib/api";
 import { inputClass, primaryButton } from "@/admin/styles";
 import { Alert, FieldLabel } from "@/admin/components/AdminUi";
@@ -32,6 +33,12 @@ export default function LoginPanel({ onLogin }) {
         onSubmit={submit}
         className="relative w-full max-w-md rounded-3xl border border-white/10 bg-white p-8 shadow-2xl sm:p-10"
       >
+        <a
+          href="/"
+          className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-cyan"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to website
+        </a>
         <img src="/images/logo/logo_dark.png" alt="KASMED" className="mb-8 h-12 w-auto" />
         <h1 className="text-3xl font-extrabold text-navy">Admin sign in</h1>
         <p className="mb-8 mt-2 text-sm text-slate-500">

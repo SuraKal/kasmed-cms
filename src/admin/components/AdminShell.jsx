@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LogOut, Menu, X } from "lucide-react";
+import { ExternalLink, LogOut, Menu, X } from "lucide-react";
 
 export default function AdminShell({
   user,
@@ -59,6 +59,15 @@ export default function AdminShell({
                 {user.role?.name?.replaceAll("_", " ")}
               </p>
             </div>
+            <a
+              href="/"
+              target="_blank"
+              rel="noreferrer"
+              className="mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-white/65 hover:bg-white/10 hover:text-white"
+            >
+              <ExternalLink className="h-4 w-4" />
+              View public site
+            </a>
             <button
               onClick={onLogout}
               className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-white/65 hover:bg-white/10 hover:text-white"
@@ -76,4 +85,3 @@ export default function AdminShell({
     </div>
   );
 }
-

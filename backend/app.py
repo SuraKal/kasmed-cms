@@ -14,13 +14,14 @@ from flask import Flask, g, jsonify, request, send_from_directory, session
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import UniqueConstraint, func, or_
+from sqlalchemy import UniqueConstraint, func, or_, text
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent
 UPLOAD_DIR = BASE_DIR / "uploads"
+DIST_DIR = PROJECT_ROOT / "dist"
 load_dotenv(PROJECT_ROOT / ".env")
 
 db = SQLAlchemy()
@@ -455,6 +456,8 @@ def create_app():
         JSON_SORT_KEYS=False,
         MAX_CONTENT_LENGTH=int(os.getenv("MAX_UPLOAD_MB", "8")) * 1024 * 1024,
         SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_NAME="kasmed_admin_session",
+        PERMANENT_SESSION_LIFETIME=timedelta(hours=12),
         SESSION_COOKIE_SAMESITE=os.getenv("SESSION_COOKIE_SAMESITE", "Lax"),
         SESSION_COOKIE_SECURE=os.getenv("SESSION_COOKIE_SECURE", "false").lower()
         == "true",
@@ -473,6 +476,20 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+    @app.after_request
+    def add_security_headers(response):
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+        response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        response.headers.setdefault(
+            "Permissions-Policy", "camera=(), microphone=(), geolocation=()"
+        )
+        if request.is_secure:
+            response.headers.setdefault(
+                "Strict-Transport-Security", "max-age=31536000; includeSubDomains"
+            )
+        return response
 
     @app.get("/api/health")
     def health_check():
@@ -506,6 +523,16 @@ def create_app():
         if resource == "settings":
             return jsonify(get_or_create_settings().to_dict())
         return jsonify({"error": "Resource not found"}), 404
+
+    @app.get("/api/content/<resource>/<slug>")
+    def public_content_detail(resource, slug):
+        if resource not in {"engagements", "solutions", "values"}:
+            return jsonify({"error": "Resource not found"}), 404
+        model = CONTENT_CONFIG[resource]["model"]
+        item = model.query.filter_by(slug=slug, status="active").first()
+        if item is None:
+            return jsonify({"error": "Content not found"}), 404
+        return jsonify(item.to_dict())
 
     @app.post("/api/analytics/events")
     def create_analytics_event():
@@ -560,6 +587,7 @@ def create_app():
             return jsonify({"error": "Invalid username or password"}), 401
 
         session.clear()
+        session.permanent = True
         session["admin_user_id"] = user.id
         user.last_login_at = utc_now()
         add_audit_log(
@@ -1047,6 +1075,23 @@ def create_app():
         db.session.commit()
         return jsonify(user.to_dict())
 
+    @app.get("/")
+    def serve_frontend():
+        if not (DIST_DIR / "index.html").exists():
+            return jsonify({"error": "Frontend build not found. Run npm run build."}), 404
+        return send_from_directory(DIST_DIR, "index.html")
+
+    @app.get("/<path:path>")
+    def serve_frontend_path(path):
+        if path.startswith("api/"):
+            return jsonify({"error": "API route not found"}), 404
+        requested_file = DIST_DIR / path
+        if requested_file.is_file():
+            return send_from_directory(DIST_DIR, path)
+        if not (DIST_DIR / "index.html").exists():
+            return jsonify({"error": "Frontend build not found. Run npm run build."}), 404
+        return send_from_directory(DIST_DIR, "index.html")
+
     @app.cli.command("init-db")
     def init_db_command():
         db.create_all()
@@ -1083,6 +1128,42 @@ def create_app():
             f"{counts['updated']} updated, "
             f"{counts['unchanged']} unchanged"
         )
+
+    @app.cli.command("check-production")
+    def check_production_command():
+        checks = {
+            "frontend build exists": (DIST_DIR / "index.html").exists(),
+            "Flask debug is disabled": not app.debug,
+            "secure session cookies enabled": app.config["SESSION_COOKIE_SECURE"],
+            "strong Flask secret configured": len(app.config["SECRET_KEY"]) >= 32
+            and app.config["SECRET_KEY"]
+            not in {"dev-secret-key", "change-me-in-production"},
+            "non-root database user configured": os.getenv("MYSQL_USER", "root").lower()
+            != "root",
+            "automatic schema initialization disabled": os.getenv(
+                "AUTO_INIT_DB", "false"
+            ).lower()
+            == "false",
+            "production administrator password changed": os.getenv(
+                "ADMIN_DEFAULT_PASSWORD", ""
+            )
+            not in {"", "admin123", "KasmedAdmin@2026"},
+            "upload directory is writable": os.access(UPLOAD_DIR, os.W_OK),
+        }
+        try:
+            db.session.execute(text("SELECT 1"))
+            checks["database connection succeeds"] = True
+        except Exception:
+            checks["database connection succeeds"] = False
+
+        for label, passed in checks.items():
+            click.echo(f"{'PASS' if passed else 'FAIL'}: {label}")
+        failures = [label for label, passed in checks.items() if not passed]
+        if failures:
+            raise click.ClickException(
+                f"{len(failures)} production requirement(s) need attention"
+            )
+        click.echo("Production configuration is ready")
 
     if os.getenv("AUTO_INIT_DB", "false").lower() == "true":
         with app.app_context():

@@ -23,8 +23,9 @@ export async function apiRequest(path, options = {}) {
     ) {
       window.dispatchEvent(new Event("kasmed:authentication-required"));
     }
-    const error = new Error(data.error || "Request failed");
-    error.status = response.status;
+    const error = Object.assign(new Error(data.error || "Request failed"), {
+      status: response.status,
+    });
     throw error;
   }
   return data;

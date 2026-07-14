@@ -3,7 +3,7 @@ import { Check, ChevronLeft, ChevronRight, Save, Trash2, X } from "lucide-react"
 import { primaryButton, secondaryButton } from "@/admin/styles";
 import { titleCase } from "@/admin/config/resources";
 
-export function PageHeader({ title, subtitle, action }) {
+export function PageHeader({ title, subtitle, action = null }) {
   return (
     <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
@@ -105,7 +105,7 @@ export function Pagination({ pagination, onPageChange }) {
   );
 }
 
-export function ModalActions({ onClose, saving, onSave }) {
+export function ModalActions({ onClose, saving, onSave = null }) {
   return (
     <div className="flex justify-end gap-3 border-t border-slate-100 pt-5">
       <button type="button" onClick={onClose} className={secondaryButton}>
@@ -119,7 +119,7 @@ export function ModalActions({ onClose, saving, onSave }) {
   );
 }
 
-export function FieldLabel({ label, hint, children }) {
+export function FieldLabel({ label, hint = null, children }) {
   return (
     <label className="block">
       <span className="mb-2 flex items-center justify-between text-sm font-semibold text-slate-700">

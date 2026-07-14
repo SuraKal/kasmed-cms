@@ -1,2 +1,3 @@
-from app import app
+from backend.app import app
 
+application = app

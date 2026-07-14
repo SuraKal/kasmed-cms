@@ -53,6 +53,9 @@ using Base44.
 - Load active content from Flask.
 - Preserve current hardcoded content as a fallback if the API is unavailable or
   a resource has no database records.
+- Preserve the one-page landing page and provide separate About, Contact,
+  Gallery, Areas of Engagement, and Solutions & Products pages.
+- Provide generated-slug detail pages for engagements and solutions.
 - Submit the contact form to MySQL.
 - Apply site settings to contact details, footer, map, and social links.
 

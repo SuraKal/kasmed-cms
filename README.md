@@ -91,10 +91,31 @@ The app reads branding and contact details from `.env`:
 - No Base44 CLI or backend is required.
 - The React public site reads active content from Flask and uses its existing
   content if the API is unavailable or a managed table is empty.
+- The landing page remains available at `/`, with additional public routes at
+  `/about`, `/contact`, `/gallery`, `/engagements`, and `/solutions`.
+- Engagement and solution detail pages use their generated slugs, for example
+  `/engagements/import-distribution` and `/solutions/renal-care-systems`.
 - Uploaded images are stored in `backend/uploads`.
 - Partner logos can be dropped into `public/images/clients`, `public/images/suppliers`, and `public/images/customers`.
-- For production, set `VITE_API_BASE_URL` to the public Flask URL before running
-  `npm run build`.
+- Keep `VITE_API_BASE_URL` empty for the recommended same-origin Flask
+  deployment. Set it only when the frontend and API intentionally use different
+  domains.
+
+## Deployment
+
+Flask serves the compiled `dist` application and `/api` from the same origin in
+production. See `DEPLOYMENT.md` for the cPanel Passenger, environment, MySQL,
+seed, uploads, and verification steps.
+
+GitHub Actions deployment is configured in `.github/workflows/deploy-ftp.yml`.
+It builds the React app, validates the Flask entry points, and uploads the
+project to cPanel over FTP/FTPS. Configure the required FTP secrets in GitHub
+before running it.
+
+Production verification commands:
+
+- `python -m flask --app backend.app check-production`
+- `python -m backend.tests.production_smoke`
 
 
 Seed the data by 
@@ -103,3 +124,7 @@ python -m flask --app backend.app seed-public-content
 
 Activate using 
 source backend/.venv/Scripts/activate
+
+
+Fill production credentials, then run:
+python -m flask --app backend.app check-production

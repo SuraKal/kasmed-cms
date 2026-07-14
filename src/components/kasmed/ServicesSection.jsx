@@ -48,13 +48,17 @@ export default function ServicesSection({ items = [] }) {
     items.length > 0
       ? items.map((item, index) => ({
           icon: serviceIcons[index % serviceIcons.length],
+          slug: item.slug,
           title: item.name,
           description: item.description,
           image:
             resolveAssetUrl(item.thumbnail) ||
             fallbackServices[index % fallbackServices.length].image,
         }))
-      : fallbackServices;
+      : fallbackServices.map((item) => ({
+          ...item,
+          slug: item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+        }));
 
   return (
     <section
@@ -107,16 +111,22 @@ export default function ServicesSection({ items = [] }) {
                 <div className="p-6 lg:p-8">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h3 className="text-xl font-bold text-navy mb-2 group-hover:text-cyan transition-colors">
-                        {service.title}
-                      </h3>
+                      <a href={`/engagements/${service.slug}`}>
+                        <h3 className="text-xl font-bold text-navy mb-2 group-hover:text-cyan transition-colors">
+                          {service.title}
+                        </h3>
+                      </a>
                       <p className="text-navy/60 leading-relaxed">
                         {service.description}
                       </p>
                     </div>
-                    <div className="w-10 h-10 rounded-full bg-surgical flex items-center justify-center shrink-0 group-hover:bg-cyan group-hover:text-white transition-all mt-1">
+                    <a
+                      href={`/engagements/${service.slug}`}
+                      aria-label={`View ${service.title}`}
+                      className="w-10 h-10 rounded-full bg-surgical flex items-center justify-center shrink-0 group-hover:bg-cyan group-hover:text-white transition-all mt-1"
+                    >
                       <ArrowUpRight className="w-4 h-4" />
-                    </div>
+                    </a>
                   </div>
                 </div>
               </motion.div>

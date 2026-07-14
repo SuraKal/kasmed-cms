@@ -232,14 +232,23 @@ function SolutionModal({ solution, onClose }) {
             </div>
           </div>
           <div className="mt-8 pt-6 border-t border-surgical">
-            <a
-              href="#contact"
-              onClick={onClose}
-              className="inline-flex items-center gap-2 bg-cyan text-white px-6 py-3 rounded-xl font-semibold hover:bg-cyan/90 transition-all shadow-lg shadow-cyan/20"
-            >
-              Request Information
-              <ArrowRight className="w-4 h-4" />
-            </a>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={`/solutions/${solution.slug}`}
+                className="inline-flex items-center gap-2 bg-navy text-white px-6 py-3 rounded-xl font-semibold hover:bg-navy/90 transition-all"
+              >
+                View Full Page
+                <ArrowRight className="w-4 h-4" />
+              </a>
+              <a
+                href="/contact"
+                onClick={onClose}
+                className="inline-flex items-center gap-2 bg-cyan text-white px-6 py-3 rounded-xl font-semibold hover:bg-cyan/90 transition-all shadow-lg shadow-cyan/20"
+              >
+                Request Information
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -265,6 +274,7 @@ export default function SolutionsSection({ items = [] }) {
     items.length > 0
       ? items.map((item, index) => ({
           icon: solutionIcons[index % solutionIcons.length],
+          slug: item.slug,
           title: item.name,
           short: item.short_description,
           full: item.description || item.short_description,
@@ -273,7 +283,10 @@ export default function SolutionsSection({ items = [] }) {
             fallbackSolutions[index % fallbackSolutions.length].image,
           products: item.tags || [],
         }))
-      : fallbackSolutions;
+      : fallbackSolutions.map((item) => ({
+          ...item,
+          slug: item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+        }));
 
   return (
     <section

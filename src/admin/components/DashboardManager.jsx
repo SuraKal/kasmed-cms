@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Activity,
   ArrowRight,
+  ExternalLink,
   Eye,
   Mail,
   MousePointerClick,
@@ -25,7 +26,12 @@ export default function DashboardManager({ availableResources, onNavigate }) {
     { label: "Clicks", value: data.summary.clicks, icon: MousePointerClick },
     { label: "Section Views", value: data.summary.section_views, icon: Activity },
     { label: "Unique Visitors", value: data.summary.unique_visitors, icon: Users },
-    { label: "Messages", value: data.summary.messages, icon: Mail },
+    {
+      label: "Messages",
+      value: data.summary.messages,
+      icon: Mail,
+      resource: "messages",
+    },
   ];
   const maxDaily = Math.max(...data.daily_activity.map((item) => item.count), 1);
   const quickResources = availableResources.filter(
@@ -37,12 +43,39 @@ export default function DashboardManager({ availableResources, onNavigate }) {
       <PageHeader
         title="Dashboard"
         subtitle="Public engagement and management activity from the last 30 days."
+        action={
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="/"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-600 transition hover:border-cyan/30 hover:text-cyan"
+            >
+              View Website
+            </a>
+            <a
+              href="/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl bg-navy px-5 py-3 text-sm font-semibold text-white transition hover:bg-navy/90"
+            >
+              Open in New Tab <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
+        }
       />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {stats.map((stat) => (
-          <article
+          <button
             key={stat.label}
-            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+            type="button"
+            disabled={
+              !stat.resource || !availableResources.includes(stat.resource)
+            }
+            onClick={() => stat.resource && onNavigate(stat.resource)}
+            className={`rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition ${
+              stat.resource && availableResources.includes(stat.resource)
+                ? "cursor-pointer hover:-translate-y-1 hover:border-cyan/40 hover:shadow-md"
+                : "cursor-default"
+            }`}
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan/10 text-cyan">
               <stat.icon className="h-5 w-5" />
@@ -51,7 +84,10 @@ export default function DashboardManager({ availableResources, onNavigate }) {
               {stat.value.toLocaleString()}
             </p>
             <p className="mt-1 text-sm text-slate-500">{stat.label}</p>
-          </article>
+            {stat.resource && availableResources.includes(stat.resource) && (
+              <p className="mt-3 text-xs font-semibold text-cyan">Open messages →</p>
+            )}
+          </button>
         ))}
       </div>
 
@@ -172,4 +208,3 @@ function formatDate(value) {
     timeStyle: "short",
   }).format(new Date(value));
 }
-

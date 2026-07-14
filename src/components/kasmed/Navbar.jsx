@@ -7,12 +7,12 @@ const LOGO_LIGHT = "/images/logo/logo_light.png";
 const LOGO_DARK = "/images/logo/logo_dark.png";
 
 const NAV_LINKS = [
-  { label: "About", href: "#about" },
-  { label: "Solutions", href: "#solutions" },
-  { label: "Services", href: "#services" },
-  { label: "Suppliers", href: "#partners" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "/about" },
+  { label: "Solutions", href: "/solutions" },
+  { label: "Engagements", href: "/engagements" },
+  { label: "Suppliers", href: "/#partners" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar({ settings }) {
@@ -40,7 +40,7 @@ export default function Navbar({ settings }) {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <a href="#hero" className="flex items-center gap-2 group">
+          <a href="/" className="flex items-center gap-2 group">
             <img
               src={scrolled ? LOGO_DARK : LOGO_LIGHT}
               alt={companyName}
@@ -78,7 +78,7 @@ export default function Navbar({ settings }) {
               <span className="hidden xl:inline">{phone}</span>
             </a>
             <a
-              href="#contact"
+              href="/contact"
               className="bg-cyan text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-cyan/90 transition-all shadow-lg shadow-cyan/20 hover:shadow-cyan/30 hover:-translate-y-0.5"
             >
               Get in Touch
@@ -149,7 +149,7 @@ export default function Navbar({ settings }) {
                     {phone}
                   </a>
                   <a
-                    href="#contact"
+                    href="/contact"
                     onClick={() => setMobileOpen(false)}
                     className="block bg-cyan text-white text-center px-5 py-3 rounded-lg font-semibold"
                   >
